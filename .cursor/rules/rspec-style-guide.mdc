@@ -1,0 +1,117 @@
+---
+description: Standards for writing RSpec tests in the project.
+globs: spec/**/*_spec.rb
+---
+# RSpec Style Guide
+
+> **Version**: 1.0.0
+> **Scope**: `.*_spec\.rb$`
+> **Tags**: #testing #rspec
+
+Standards for writing RSpec tests in the project.
+
+<rule>
+name: rspec-style-guide
+description: Guidelines for writing consistent and maintainable RSpec tests
+filters:
+  - type: file_extension
+    pattern: "_spec\\.rb$"
+  - type: content
+    pattern: "RSpec\\.describe"
+
+actions:
+  - type: suggest
+    message: |
+      When writing RSpec tests:
+
+      1. Structure and Organization:
+         - Use descriptive context blocks with `describe` and `context`
+         - Group related tests together
+         - Use consistent indentation
+         ```ruby
+         RSpec.describe User do
+           describe '#full_name' do
+             context 'when first and last name are present' do
+               it 'returns the full name' do
+                 # test code
+               end
+             end
+           end
+         end
+         ```
+
+      2. Naming Conventions:
+         - Use descriptive `it` blocks that read like sentences
+         - Start context blocks with "when", "with", or "without"
+         - Name files as `<class_name>_spec.rb`
+
+3. Best Practices:
+   - Use `let` for test data setup
+   - Prefer `let` over instance variables
+   - Use `before` blocks sparingly
+   - One expectation per test when possible
+   - Always use named subjects when possible:
+     ```ruby
+     # Good
+     subject(:user) { described_class.new }
+     it 'does something specific' do
+       expect(user.demo?).to be
+     end
+     
+     # Avoid
+     subject { described_class.new }
+     it 'works' do
+       expect(subject.valid?).to be true
+     end
+     ```
+
+      4. Factory Usage:
+         - Use FactoryBot for test data
+         - Keep factories minimal and focused
+         - Use traits for variations
+         ```ruby
+         factory :user do
+           trait :admin do
+             admin { true }
+           end
+         end
+         ```
+
+      5. Avoid:
+         - Overuse of `before` blocks
+         - Multiple expectations in single tests
+         - Testing private methods directly
+         - Deeply nested contexts
+
+examples:
+  - input: |
+      # Bad
+      describe 'stuff' do
+        it 'does things' do
+          user = User.create
+          expect(user.something).to be_true
+          expect(user.other_thing).to eq('value')
+        end
+      end
+
+      # Good
+      RSpec.describe User do
+        let(:user) { create(:user) }
+
+        describe '#something' do
+          it 'returns true' do
+            expect(user.something).to be_true
+          end
+        end
+
+        describe '#other_thing' do
+          it 'returns the expected value' do
+            expect(user.other_thing).to eq('value')
+          end
+        end
+      end
+
+metadata:
+  priority: high
+  version: 1.0
+</rule>

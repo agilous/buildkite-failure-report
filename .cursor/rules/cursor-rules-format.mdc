@@ -1,0 +1,55 @@
+---
+description: Defines the format for Cursor Rule Documentation (MDC) files.
+globs: *.mdc
+---
+# Cursor Rules Format
+
+> **Version**: 1.0.0  
+> **Scope**: `.*\.mdc$`  
+> **Tags**: #meta #format
+
+## Description
+
+Defines the format for Cursor Rule Documentation (MDC) files.
+
+## Structure
+
+1. Header
+   - Title (H1)
+   - Metadata block with:
+     - Version
+     - Scope (regex pattern)
+     - Tags
+
+2. Description Section
+   - Brief overview of the rule's purpose
+   - Must be clear and concise
+
+3. Configuration (if applicable)
+   - Version requirements
+   - Tool dependencies
+   - Environment settings
+
+4. Requirements
+   - Numbered or bulleted lists
+   - Clear, actionable items
+   - Hierarchical organization when needed
+
+5. Exceptions (if applicable)
+   - List of exclusions
+   - Rationale for exceptions
+
+6. Validation
+   - How to verify compliance
+   - Reference to validation tools
+
+## Format Rules
+
+1. Use Markdown syntax
+2. Maintain consistent heading hierarchy
+3. Use blockquotes for metadata
+4. Use code blocks with language specification
+5. Use lists for structured information
+6. Include validation methods
+
+## Example

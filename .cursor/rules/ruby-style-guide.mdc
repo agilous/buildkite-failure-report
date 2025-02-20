@@ -1,0 +1,53 @@
+---
+description: Ruby Style Guide
+globs: *.rb, @.rake
+---
+# Ruby Style Guide
+
+> **Version**: 1.0.0
+> **Scope**: `.*\.(rb|rake)$`
+> **Tags**: #ruby #style-guide
+
+## Description
+
+Enforces Ruby style guide conventions across the codebase.
+
+## Configuration
+
+- Ruby Version: 3.4.1
+- Tools: RuboCop with rubocop-rspec extensions
+
+## Requirements
+
+1. String Literals
+   - Use single quotes unless string interpolation is needed
+   - Maintain consistent quotes in multiline strings
+
+2. Documentation
+   - Document all classes and modules
+   - Include meaningful class/method descriptions
+   - Exclude specs from documentation requirements
+
+3. Code Layout
+   - Maximum line length: 80 characters
+   - Include frozen string literal comment
+   - Use nested style for class/module definitions
+   - Use consistent spacing in hash literals
+
+4. Syntax Preferences
+   - Use modern Ruby 3.4+ hash syntax
+   - Use trailing commas in multiline arrays and hashes
+   - Use underscores for numeric literals with 5+ digits
+
+5. Code Organization
+   - Keep methods under 15 lines
+   - Exclude specs from block length restrictions
+
+## Exceptions
+
+The following paths are excluded from certain checks:
+- `spec/**/*`
+
+## Validation
+
+Validation is performed via RuboCop using the `.rubocop.yml` configuration file.
