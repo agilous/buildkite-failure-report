@@ -101,9 +101,9 @@ This is a comprehensive checklist for building the project in Ruby. Use this as 
 ---
 
 ## **Format and Output Test Failures as JSON**
-- [ ] Create a method in `lib/main.rb` to format the extracted test failures into the specified JSON structure.
-- [ ] Use the `json` gem to generate the JSON output.
-- [ ] Write an RSpec test to verify the JSON output matches the expected format:
+- [✅] Create a method in `lib/main.rb` to format the extracted test failures into the specified JSON structure.
+- [✅] Use the `json` gem to generate the JSON output.
+- [✅] Write an RSpec test to verify the JSON output matches the expected format:
   ```json
   [
     {
@@ -114,7 +114,7 @@ This is a comprehensive checklist for building the project in Ruby. Use this as 
     ...
   ]
   ```
-- [ ] Implement error handling for cases where no failures are found (return an empty JSON array).
+- [✅] Implement error handling for cases where no failures are found (return an empty JSON array).
 
 ---
 
