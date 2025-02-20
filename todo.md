@@ -31,10 +31,11 @@ This is a comprehensive checklist for building the project in Ruby. Use this as 
 ---
 
 ## **Authentication**
-- [ ] Create a method in `lib/main.rb` to read the Buildkite API token from `~/.buildkite/config.yml`.
-- [ ] Use the `yaml` library to parse the YAML file.
-- [ ] Write an RSpec test in `spec/main_spec.rb` to mock the config file and verify the token is read correctly.
-- [ ] Implement error handling for:
+- [✅] Create `BuildkiteConfig` class in `lib/buildkite_config.rb` to handle configuration.
+- [✅] Implement method to read the Buildkite API token from `~/.buildkite/config.yml`.
+- [✅] Use the `yaml` library to parse the YAML file.
+- [✅] Write RSpec tests in `spec/buildkite_config_spec.rb` to verify token reading functionality.
+- [✅] Implement error handling for:
   - Missing config file.
   - Malformed YAML file.
   - Missing or invalid API token.
