@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gem 'csv', '~> 3.2.8'
 gem 'httparty', '~> 0.21.0'
+gem 'irb', '~> 1.11.1'
+gem 'rdoc', '~> 6.6.2'
 
 group :development do
   gem 'solargraph', '~> 0.51.0'

@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'irb'
+
+# Recursively require all Ruby files in lib
+lib_path = File.expand_path('../lib', __dir__)
+$LOAD_PATH.unshift(lib_path) unless $LOAD_PATH.include?(lib_path)
+Dir["#{lib_path}/**/*.rb"].sort.each { |file| require file }
+
+# You can add any setup code here
+puts <<~USAGE
+  Loading BuildkiteJobService environment...
+
+  Example usage:
+    service = Services::BuildkiteJobService.new(BuildkiteFailureReport::BuildkiteConfig.api_token)
+    service.fetch_job_details(organization: "org", pipeline: "pipeline", build_number: "123")
+USAGE
+
+IRB.start
