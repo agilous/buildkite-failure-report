@@ -12,6 +12,7 @@ module Services
     class RateLimitError < BuildkiteError; end
     class AuthenticationError < BuildkiteError; end
     class RSpecJobNotFoundError < BuildkiteError; end
+    class LogNotFoundError < BuildkiteError; end
 
     def initialize(access_token)
       @access_token = access_token
@@ -61,6 +62,32 @@ module Services
       raise BuildkiteError, "API request failed: #{e.message}"
     end
 
+    # Fetches the log content for a specific job
+    #
+    # @param organization [String] Buildkite organization slug
+    # @param pipeline [String] Pipeline slug
+    # @param build_number [String] Build number
+    # @param job_id [String] Job ID
+    # @return [String] The job's log content
+    # @raise [LogNotFoundError] if the log cannot be found
+    # @raise [BuildkiteError] if there's an API error
+    def fetch_job_log(organization:, pipeline:, build_number:, job_id:)
+      response = self.class.get(
+        "/organizations/#{organization}/pipelines/#{pipeline}/builds/#{build_number}/jobs/#{job_id}/log"
+      )
+
+      case response.code
+      when 200
+        parse_log_response(response)
+      when 404
+        raise LogNotFoundError, "Log not found for job #{job_id}"
+      else
+        handle_error_response(response)
+      end
+    rescue HTTParty::Error => e
+      raise BuildkiteError, "API request failed: #{e.message}"
+    end
+
     private
 
     def fetch_single_job(organization:, pipeline:, build_number:, job_id:)
@@ -91,6 +118,25 @@ module Services
       else
         raise BuildkiteError, "Unexpected response (#{response.code}): #{response.body}"
       end
+    end
+
+    def handle_error_response(response)
+      case response.code
+      when 401
+        raise AuthenticationError, 'Invalid access token'
+      when 429
+        raise RateLimitError, 'Rate limit exceeded'
+      else
+        raise BuildkiteError, "Unexpected response (#{response.code}): #{response.body}"
+      end
+    end
+
+    def parse_log_response(response)
+      log_data = response.parsed_response
+      return log_data['content'] if log_data.is_a?(Hash) && log_data['content']
+
+      # Fallback for non-JSON responses or responses without content
+      response.body
     end
   end
 end

@@ -39,9 +39,11 @@
    - **Step 5.3**: Implement error handling for API errors when fetching logs.
 
 ## 6. **Parse Logs to Extract Test Failures**
-   - **Step 6.1**: Create a method to parse the logs and extract test failures.
-   - **Step 6.2**: Write RSpec tests for various log formats to ensure the parsing logic is robust.
-   - **Step 6.3**: Implement error handling for malformed logs.
+   - **Step 6.1**: Create a LogParserService class in lib/services/log_parser_service.rb to handle RSpec test failure extraction.
+   - **Step 6.2**: The service should include methods for parsing raw log content, identifying test failure blocks, and extracting failure details (file, line, message).
+   - **Step 6.3**: Write comprehensive RSpec tests in spec/services/log_parser_service_spec.rb to verify parsing of different RSpec failure formats, handling of multi-line error messages, ANSI color codes, and edge cases.
+   - **Step 6.4**: Implement robust error handling for malformed logs, missing information, and invalid data.
+   - **Step 6.5**: The service should return structured data that can be easily converted to JSON in the next step.
 
 ## 7. **Format and Output Test Failures as JSON**
    - **Step 7.1**: Create a method to format the extracted test failures into the specified JSON structure using `json` gem.
@@ -94,7 +96,7 @@ Create a method to fetch logs for the "RSpec" job using the Buildkite API. Write
 
 ### **Chunk 6: Parse Logs to Extract Test Failures**
 ```text
-Create a method to parse the logs and extract test failures. Write RSpec tests for various log formats to ensure the parsing logic is robust. Implement error handling for malformed logs.
+Create a LogParserService class in lib/services/log_parser_service.rb to handle RSpec test failure extraction. The service should include methods for parsing raw log content, identifying test failure blocks, and extracting failure details (file, line, message). Write comprehensive RSpec tests in spec/services/log_parser_service_spec.rb to verify parsing of different RSpec failure formats, handling of multi-line error messages, ANSI color codes, and edge cases. Implement robust error handling for malformed logs, missing information, and invalid data. The service should return structured data that can be easily converted to JSON in the next step.
 ```
 
 ### **Chunk 7: Format and Output Test Failures as JSON**

@@ -68,21 +68,35 @@ This is a comprehensive checklist for building the project in Ruby. Use this as 
 ---
 
 ## **Fetch Logs for the "RSpec" Job**
-- [ ] Create a method in `lib/main.rb` to fetch logs for the "RSpec" job using the Buildkite API.
-- [ ] Use `HTTParty` to make the API request.
-- [ ] Write an RSpec test to mock the log response and verify the method works correctly.
-- [ ] Implement error handling for:
-  - API errors when fetching logs.
-  - Missing or empty logs.
+- [✅] Create a method in `lib/services/buildkite_job_service.rb` to fetch logs for the "RSpec" job using the Buildkite API.
+- [✅] Use `HTTParty` to make the API request.
+- [✅] Write an RSpec test to mock the log response and verify the method works correctly:
+  - Test successful JSON response handling
+  - Test non-JSON response handling
+  - Test error cases
+- [✅] Implement error handling for:
+  - API errors when fetching logs (401, 429, 500)
+  - Missing or empty logs (404)
+  - Network errors
+  - Malformed responses
 
 ---
 
 ## **Parse Logs to Extract Test Failures**
-- [ ] Create a method in `lib/main.rb` to parse the logs and extract test failures.
-- [ ] Write RSpec tests for various log formats to ensure the parsing logic is robust.
+- [ ] Create `LogParserService` in `lib/services/log_parser_service.rb` to handle RSpec test failure extraction:
+  - Method to parse raw log content
+  - Method to identify test failure blocks
+  - Method to extract failure details (file, line, message)
+- [ ] Write comprehensive RSpec tests in `spec/services/log_parser_service_spec.rb`:
+  - Test parsing of different RSpec failure formats
+  - Test handling of multi-line error messages
+  - Test handling of ANSI color codes in logs
+  - Test edge cases (empty logs, no failures, malformed output)
 - [ ] Implement error handling for:
-  - Malformed logs.
-  - Logs with no test failures.
+  - Malformed or unexpected log formats
+  - Missing or corrupted failure information
+  - Invalid line numbers or file paths
+  - Logs with no test failures (return empty array)
 
 ---
 

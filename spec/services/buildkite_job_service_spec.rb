@@ -17,6 +17,9 @@ RSpec.describe Services::BuildkiteJobService do
   let(:build_endpoint) do
     "/organizations/#{organization}/pipelines/#{pipeline}/builds/#{build_number}"
   end
+  let(:log_endpoint) do
+    "/organizations/#{organization}/pipelines/#{pipeline}/builds/#{build_number}/jobs/#{job_id}/log"
+  end
 
   subject(:service) { described_class.new(access_token) }
 
@@ -267,6 +270,167 @@ RSpec.describe Services::BuildkiteJobService do
           Services::BuildkiteJobService::RSpecJobNotFoundError,
           'RSpec job not found. Available jobs: :ruby: Lint'
         )
+      end
+    end
+  end
+
+  describe '#fetch_job_log' do
+    context 'when the request is successful' do
+      let(:raw_log_content) { "Running RSpec...\nTest failed: expected true but got false" }
+      let(:log_response) do
+        {
+          'url' => "#{base_url}#{log_endpoint}",
+          'content' => raw_log_content,
+          'size' => raw_log_content.bytesize,
+          'header_times' => {
+            'started' => '2024-02-20T12:00:00.000Z',
+            'finished' => '2024-02-20T12:01:00.000Z'
+          }
+        }
+      end
+
+      before do
+        stub_request(:get, "#{base_url}#{log_endpoint}")
+          .with(
+            headers: {
+              'Authorization' => "Bearer #{access_token}",
+              'Content-Type' => 'application/json'
+            }
+          )
+          .to_return(
+            status: 200,
+            body: log_response.to_json,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+      end
+
+      it 'returns the log content' do
+        result = service.fetch_job_log(
+          organization: organization,
+          pipeline: pipeline,
+          build_number: build_number,
+          job_id: job_id
+        )
+        expect(result).to eq(raw_log_content)
+      end
+    end
+
+    context 'when the response is not in JSON format' do
+      let(:raw_log_content) { "Plain text log content" }
+
+      before do
+        stub_request(:get, "#{base_url}#{log_endpoint}")
+          .with(
+            headers: {
+              'Authorization' => "Bearer #{access_token}",
+              'Content-Type' => 'application/json'
+            }
+          )
+          .to_return(
+            status: 200,
+            body: raw_log_content,
+            headers: { 'Content-Type' => 'text/plain' }
+          )
+      end
+
+      it 'returns the raw log content' do
+        result = service.fetch_job_log(
+          organization: organization,
+          pipeline: pipeline,
+          build_number: build_number,
+          job_id: job_id
+        )
+        expect(result).to eq(raw_log_content)
+      end
+    end
+
+    context 'when the log is not found' do
+      before do
+        stub_request(:get, "#{base_url}#{log_endpoint}")
+          .to_return(status: 404, body: '{"message": "Log not found"}')
+      end
+
+      it 'raises a LogNotFoundError' do
+        expect do
+          service.fetch_job_log(
+            organization: organization,
+            pipeline: pipeline,
+            build_number: build_number,
+            job_id: job_id
+          )
+        end.to raise_error(Services::BuildkiteJobService::LogNotFoundError, /Log not found for job/)
+      end
+    end
+
+    context 'when authentication fails' do
+      before do
+        stub_request(:get, "#{base_url}#{log_endpoint}")
+          .to_return(status: 401, body: '{"message": "Unauthorized"}')
+      end
+
+      it 'raises an AuthenticationError' do
+        expect do
+          service.fetch_job_log(
+            organization: organization,
+            pipeline: pipeline,
+            build_number: build_number,
+            job_id: job_id
+          )
+        end.to raise_error(Services::BuildkiteJobService::AuthenticationError, 'Invalid access token')
+      end
+    end
+
+    context 'when rate limit is exceeded' do
+      before do
+        stub_request(:get, "#{base_url}#{log_endpoint}")
+          .to_return(status: 429, body: '{"message": "Too Many Requests"}')
+      end
+
+      it 'raises a RateLimitError' do
+        expect do
+          service.fetch_job_log(
+            organization: organization,
+            pipeline: pipeline,
+            build_number: build_number,
+            job_id: job_id
+          )
+        end.to raise_error(Services::BuildkiteJobService::RateLimitError, 'Rate limit exceeded')
+      end
+    end
+
+    context 'when an unexpected error occurs' do
+      before do
+        stub_request(:get, "#{base_url}#{log_endpoint}")
+          .to_return(status: 500, body: '{"message": "Internal Server Error"}')
+      end
+
+      it 'raises a BuildkiteError' do
+        expect do
+          service.fetch_job_log(
+            organization: organization,
+            pipeline: pipeline,
+            build_number: build_number,
+            job_id: job_id
+          )
+        end.to raise_error(Services::BuildkiteJobService::BuildkiteError, /Unexpected response/)
+      end
+    end
+
+    context 'when the HTTP request fails' do
+      before do
+        stub_request(:get, "#{base_url}#{log_endpoint}")
+          .to_raise(HTTParty::Error.new('Network error'))
+      end
+
+      it 'raises a BuildkiteError' do
+        expect do
+          service.fetch_job_log(
+            organization: organization,
+            pipeline: pipeline,
+            build_number: build_number,
+            job_id: job_id
+          )
+        end.to raise_error(Services::BuildkiteJobService::BuildkiteError, /API request failed/)
       end
     end
   end
