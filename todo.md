@@ -5,15 +5,15 @@ This is a comprehensive checklist for building the project in Ruby. Use this as 
 ---
 
 ## **Project Setup**
-- [ ] Create a new directory for the project.
-- [ ] Initialize a Git repository.
-- [ ] Set up a `Gemfile` with the following gems:
+- [✅] Create a new directory for the project.
+- [✅] Initialize a Git repository.
+- [✅] Set up a `Gemfile` with the following gems:
+  - `csv` (for HTTParty)
   - `httparty` (for API requests)
-  - `yaml` (for parsing the config file)
   - `rspec` (for testing)
-  - `json` (for formatting output)
-- [ ] Run `bundle install` to install dependencies.
-- [ ] Create the project structure:
+  - `solargraph` (for code completion)
+- [✅] Run `bundle install` to install dependencies.
+- [✅] Create the project structure:
   ```
   buildkite_test_failures/
   ├── lib/
@@ -25,8 +25,8 @@ This is a comprehensive checklist for building the project in Ruby. Use this as 
   ├── Gemfile.lock
   └── README.md
   ```
-- [ ] Add a `.gitignore` file to exclude unnecessary files (e.g., `Gemfile.lock`, `.DS_Store`, etc.).
-- [ ] Write a basic `README.md` with a project description.
+- [✅] Add a `.gitignore` file to exclude unnecessary files (e.g., `Gemfile.lock`, `.DS_Store`, etc.).
+- [✅] Write a basic `README.md` with a project description.
 
 ---
 

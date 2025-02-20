@@ -1,0 +1,25 @@
+*.gem
+*.rbc
+/.config
+/coverage/
+/InstalledFiles
+/pkg/
+/spec/reports/
+/spec/examples.txt
+/test/tmp/
+/test/version_tmp/
+/tmp/
+
+# Gemfile.lock is typically included in applications but excluded in gems
+# Gemfile.lock
+
+# Environment normalization
+/.bundle/
+/vendor/bundle
+/lib/bundler/man/
+
+# RSpec state
+.rspec_status
+
+# MacOS files
+.DS_Store
