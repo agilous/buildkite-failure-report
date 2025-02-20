@@ -43,10 +43,10 @@ This is a comprehensive checklist for building the project in Ruby. Use this as 
 ---
 
 ## **Fetch Job Details from Buildkite API**
-- [ ] Create a method in `lib/main.rb` to fetch job details using the Buildkite API.
-- [ ] Use `HTTParty` to make the API request.
-- [ ] Write an RSpec test to mock the API response and verify the method works correctly.
-- [ ] Implement error handling for:
+- [✅] Create a method in `lib/main.rb` to fetch job details using the Buildkite API.
+- [✅] Use `HTTParty` to make the API request.
+- [✅] Write an RSpec test to mock the API response and verify the method works correctly.
+- [✅] Implement error handling for:
   - API rate limits.
   - Authentication errors.
   - Network issues.
