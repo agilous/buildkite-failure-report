@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'httparty'
+require_relative 'job_filter_service'
 
 module Services
   class BuildkiteJobService
@@ -10,6 +11,7 @@ module Services
     class BuildkiteError < StandardError; end
     class RateLimitError < BuildkiteError; end
     class AuthenticationError < BuildkiteError; end
+    class RSpecJobNotFoundError < BuildkiteError; end
 
     def initialize(access_token)
       @access_token = access_token
@@ -17,6 +19,27 @@ module Services
         'Authorization' => "Bearer #{@access_token}",
         'Content-Type' => 'application/json'
       )
+    end
+
+    # Finds the RSpec job in a build
+    #
+    # @param organization [String] Buildkite organization slug
+    # @param pipeline [String] Pipeline slug
+    # @param build_number [String] Build number
+    # @return [Hash] The RSpec job details
+    # @raise [RSpecJobNotFoundError] if RSpec job is not found
+    def find_rspec_job(organization:, pipeline:, build_number:)
+      jobs = fetch_job_details(
+        organization: organization,
+        pipeline: pipeline,
+        build_number: build_number
+      )
+
+      rspec_job = JobFilterService.find_rspec_job(jobs)
+      return rspec_job if rspec_job
+
+      available_jobs = JobFilterService.available_job_names(jobs)
+      raise RSpecJobNotFoundError, "RSpec job not found. Available jobs: #{available_jobs.join(', ')}"
     end
 
     def fetch_job_details(organization:, pipeline:, build_number:, job_id: nil)

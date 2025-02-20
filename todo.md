@@ -54,11 +54,16 @@ This is a comprehensive checklist for building the project in Ruby. Use this as 
 ---
 
 ## **Filter for the "RSpec" Job**
-- [ ] Create a method in `lib/main.rb` to filter the job list for the "RSpec" job.
-- [ ] Write an RSpec test to mock a list of jobs and verify the filtering logic.
-- [ ] Implement graceful error handling if the "RSpec" job is not found:
-  - Display a list of available jobs.
-  - Return an empty JSON array.
+- [✅] Create service classes to filter the job list for the "RSpec" job:
+  - `JobFilterService` for core filtering logic
+  - Integration with `BuildkiteJobService` for API handling
+- [✅] Write comprehensive RSpec tests to verify the filtering logic:
+  - Test successful job finding
+  - Test handling of missing jobs
+  - Test edge cases (empty lists, nil values, duplicates)
+- [✅] Implement graceful error handling if the "RSpec" job is not found:
+  - Display a sorted list of available jobs
+  - Raise informative error with available jobs list
 
 ---
 

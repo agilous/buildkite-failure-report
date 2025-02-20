@@ -197,4 +197,77 @@ RSpec.describe Services::BuildkiteJobService do
       end
     end
   end
+
+  describe '#find_rspec_job' do
+    let(:rspec_job) do
+      {
+        'id' => '456',
+        'name' => ':rspec: RSpec',
+        'state' => 'passed'
+      }
+    end
+
+    let(:other_job) do
+      {
+        'id' => '457',
+        'name' => ':ruby: Lint',
+        'state' => 'passed'
+      }
+    end
+
+    let(:build_data) do
+      {
+        'id' => build_number,
+        'jobs' => [rspec_job, other_job]
+      }
+    end
+
+    before do
+      stub_request(:get, "#{base_url}#{build_endpoint}")
+        .with(
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+        )
+        .to_return(
+          status: 200,
+          body: build_data.to_json,
+          headers: { 'Content-Type' => 'application/json' }
+        )
+    end
+
+    context 'when RSpec job exists' do
+      it 'returns the RSpec job' do
+        result = service.find_rspec_job(
+          organization: organization,
+          pipeline: pipeline,
+          build_number: build_number
+        )
+        expect(result).to eq(rspec_job)
+      end
+    end
+
+    context 'when RSpec job does not exist' do
+      let(:build_data) do
+        {
+          'id' => build_number,
+          'jobs' => [other_job]
+        }
+      end
+
+      it 'raises RSpecJobNotFoundError with available jobs' do
+        expect do
+          service.find_rspec_job(
+            organization: organization,
+            pipeline: pipeline,
+            build_number: build_number
+          )
+        end.to raise_error(
+          Services::BuildkiteJobService::RSpecJobNotFoundError,
+          'RSpec job not found. Available jobs: :ruby: Lint'
+        )
+      end
+    end
+  end
 end
