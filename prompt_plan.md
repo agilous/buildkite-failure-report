@@ -69,7 +69,7 @@
 
 ### **Chunk 1: Set Up the Project Environment**
 ```text
-Create a new directory for the project and initialize a Git repository. Set up a `Gemfile` for managing dependencies and install the necessary gems (`httparty`, `yaml`, `rspec`). Create a basic project structure with `lib/main.rb` and `spec/main_spec.rb`. Add a `.gitignore` file to exclude unnecessary files. Write a simple README.md to describe the project.
+Set up a `Gemfile` for managing dependencies and install the necessary gems (`httparty`, `yaml`, `rspec`). Create a basic project structure with `lib/main.rb` and `spec/main_spec.rb`. Add a `.gitignore` file to exclude unnecessary files. Write a simple README.md to describe the project.
 ```
 
 ### **Chunk 2: Implement Authentication**
